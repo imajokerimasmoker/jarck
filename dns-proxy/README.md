@@ -5,7 +5,8 @@ A simple DNS reverse proxy in Go with a "rewrite A AAAA" feature and fallback.
 ## Features
 
 - **Rewrite A to AAAA**: When an A record is queried, the proxy first tries to fetch AAAA records from the upstream.
-- **Fallback to A**: If no AAAA records are found (or an error occurs during the AAAA query), the proxy falls back to fetching and returning A records.
+- **CNAME Chasing**: If a CNAME is encountered, the proxy automatically follows it to find the final A or AAAA records, ensuring the full chain is returned.
+- **Fallback to A**: If no AAAA records are found (even after chasing CNAMEs), the proxy falls back to fetching and returning A records.
 - **Support for UDP and TCP**: Listens on both protocols.
 - **Configurable**: Upstream DNS server, listen address, and timeout can be configured via flags.
 

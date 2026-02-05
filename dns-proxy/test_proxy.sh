@@ -24,4 +24,12 @@ echo "Testing TCP A query for google.com..."
 RESULT=$(dig +tcp @$PROXY_ADDR -p $PROXY_PORT google.com A +short)
 echo "$RESULT" | grep -q ":" && echo "Success: Got AAAA record over TCP" || (echo "Fail: Expected AAAA record over TCP"; exit 1)
 
+echo "Testing CNAME chasing for www.facebook.com (should get AAAA via CNAME)..."
+RESULT=$(dig @$PROXY_ADDR -p $PROXY_PORT www.facebook.com A +short)
+echo "$RESULT" | grep -q ":" && echo "Success: Got AAAA record for CNAME" || (echo "Fail: Expected AAAA record for CNAME"; exit 1)
+
+echo "Testing CNAME fallback for www.github.com (should get A via CNAME)..."
+RESULT=$(dig @$PROXY_ADDR -p $PROXY_PORT www.github.com A +short)
+echo "$RESULT" | grep -q "\." && echo "Success: Got A record for CNAME fallback" || (echo "Fail: Expected A record for CNAME fallback"; exit 1)
+
 echo "All tests passed!"
